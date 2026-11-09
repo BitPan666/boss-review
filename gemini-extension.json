@@ -1,0 +1,5 @@
+{
+  "name": "boss-review",
+  "version": "1.0.0",
+  "description": "按 8 个维度给你当 AI 老板打分，引用原话，并生成一张成绩单。"
+}

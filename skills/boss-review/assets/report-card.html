@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>AI 老板绩效考核报告 · 版本 B</title>
+<script>
+/* ==========================================================================
+   ★ 成绩单数据 —— AI 只改这一段，样式和脚本一律不动 ★
+   isSample      true = 显示「示例数据」角标；真实报告改成 false。
+   date          报告日期，原样显示，如 "2026年11月9日"。
+   conversations 读了多少段对话（N），显示为「基于 N 段对话」。
+   persona       老板人设称号，建议 ≤10 字；过长自动缩字号，仍放不下截断。
+   summary       一句话总结吐槽，建议 ≤26 字，最多 2 行。
+   dimensions    固定 8 项，顺序随意（脚本自动从差到好排序）：
+     name        维度名，建议 ≤7 字，超出截断。
+     grade       "A" | "B" | "C" | "D" | "F" | null（null = 证据不足，不计入平均）
+     roast       一句吐槽，约 20 字；grade 为 null 时留空，脚本自动写「证据不足…」。
+     occasions   可选，仅 grade 为 null 时填：相关场合出现的次数。
+   focus.habit   「下周只练这一个」的习惯名。
+   focus.script  一句明天就能照做的话术，最多 2 行。
+   commentary    【本版专用】一段总评语，三四句毒舌短评，建议 ≤120 字，最多 5 行；
+                 本版不显示每项 roast，但 roast 照填（文字版成绩单要用）。
+   ——以下由脚本自动算，不要手填：平均分、总评字母、排序、条长、虚线、最差项强调色。
+   ========================================================================== */
+const REPORT = {
+  isSample: true,
+  date: "2026年11月9日",
+  conversations: 23,
+  persona: "一句话甩锅型老板",
+  summary: "活派得比外卖备注还短，还指望 AI 猜中你的心",
+  commentary: "你派活像出谜语：一句“帮我弄一下”，剩下全靠 AI 自己悟。要高级感却一张参考都不给，做完才发现跑偏，返工比干活还忙。好在目标一说清你是真放手。下周先把话说全，别再让 AI 当你肚子里的蛔虫。",
+  dimensions: [
+    { name: "交代任务",       grade: "F",  roast: "需求全靠 AI 通灵，提示词比辞职信还短" },
+    { name: "给参考样例",     grade: "D",  roast: "嘴上要高级感，参考图一张都不给" },
+    { name: "拆任务",         grade: "B",  roast: "大活会拆步骤，偶尔还是一口气全丢" },
+    { name: "先问后做",       grade: "C",  roast: "一半时候让它先问，另一半做完再返工" },
+    { name: "放手程度",       grade: "A",  roast: "给完目标就放手，这点比很多真老板强" },
+    { name: "反馈具体",       grade: "B",  roast: "多数能指到哪一行，偶尔只剩“再改改”" },
+    { name: "验收再收",       grade: "C",  roast: "一半交付看都没看，复制粘贴直接上线" },
+    { name: "把纠错变成规矩", grade: null, roast: "", occasions: 2 }
+  ],
+  focus: {
+    habit: "交代任务",
+    script: "「这次要做 X，给 Y 看，用来 Z；素材在下面，先列要点给我确认再动手。」"
+  }
+};
+</script>
+<style>
+:root{--accent:#E2580E;--ink:#221F1B;--ink2:#4A4540;--muted:#8F887E;--hair:#DDD6CA;--track:#E8E2D7;--paper:#F7F4EE;--pad:72px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#E4DFD6}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC","Noto Sans CJK SC",sans-serif;color:var(--ink);
+  font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+.card{position:relative;width:900px;height:1200px;background:var(--paper);overflow:hidden}
+.abs{position:absolute;left:var(--pad);right:var(--pad)}
+/* 顶部一行：标题左，元信息右，同一基线 */
+.top{top:64px;height:40px;display:flex;justify-content:space-between;align-items:baseline}
+.top h1{font-size:30px;line-height:40px;font-weight:900;letter-spacing:2px}
+.top .meta{font-size:20px;line-height:40px;color:var(--muted)}
+.sample{position:absolute;top:24px;right:var(--pad);font-size:20px;line-height:24px;color:var(--muted);letter-spacing:2px}
+.sample:before{content:"";display:inline-block;width:8px;height:8px;border-radius:4px;background:var(--muted);margin-right:8px;vertical-align:2px}
+/* 主视觉：超大字母 + 右侧竖排信息 */
+.hero{top:136px;height:360px;display:grid;grid-template-columns:336px minmax(0,1fr);column-gap:40px}
+.big{margin-left:-16px;font-size:400px;line-height:340px;height:360px;font-weight:900;color:var(--accent);letter-spacing:-10px}
+.big.none{color:var(--muted)}
+.side{padding-top:40px;display:flex;flex-direction:column}
+.lab{font-size:20px;line-height:24px;color:var(--muted);letter-spacing:4px;font-weight:700}
+.avg{margin-top:8px;display:flex;align-items:baseline;gap:12px}
+.avg b{font-size:64px;line-height:72px;font-weight:900}
+.avg span{font-size:22px;color:var(--muted)}
+.stampwrap{margin-top:40px;height:76px}
+.stamp{display:inline-block;max-width:calc(100% - 8px);height:68px;padding:0 24px;border:3px solid var(--accent);border-radius:34px;
+  color:var(--accent);font-weight:900;font-size:30px;line-height:62px;letter-spacing:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transform:rotate(-4deg);transform-origin:left center}
+.summary{margin-top:20px;font-size:24px;line-height:36px;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-height:72px;text-wrap:balance}
+/* 分数：两栏 × 四行，先竖后横 */
+.grid{top:536px;height:280px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,70px);grid-auto-flow:column;column-gap:56px;
+  border-top:2px solid var(--ink)}
+.cell{padding-top:16px;border-bottom:1px solid var(--hair)}
+.cell .t{display:flex;justify-content:space-between;align-items:baseline;height:28px}
+.cell .n{font-size:22px;line-height:28px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:12px}
+.cell .g{font-size:24px;line-height:28px;font-weight:900;flex:none}
+.cell .g.na{font-size:20px;font-weight:400;color:var(--muted)}
+.bar{margin-top:10px;position:relative;height:6px;background:var(--track)}
+.bar i{position:absolute;left:0;top:0;bottom:0;min-width:6px;background:var(--ink)}
+.bar.na{background:none}.bar.na:after{content:"";position:absolute;left:0;right:0;top:2px;border-top:2px dashed #C3BBAE}
+.cell.na .n{color:var(--muted)}
+.cell.worst .n,.cell.worst .g{color:var(--accent)}.cell.worst .bar i{background:var(--accent)}
+/* 总评语 */
+.comm{top:848px;height:200px;display:grid;grid-template-columns:168px minmax(0,1fr)}
+.comm .lab,.note .lab{letter-spacing:1px}
+.comm .lab{line-height:38px}
+.comm p{font-size:24px;line-height:38px;color:var(--ink);display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;max-height:190px;text-align:justify}
+/* 便签：一条细线 + 一行 */
+.note{top:1056px;height:88px;display:grid;grid-template-columns:168px auto minmax(0,1fr);border-top:1px solid var(--ink);padding-top:16px}
+.note .lab{line-height:32px}
+.note .s{font-size:22px;line-height:32px;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-height:64px}
+.note .h{font-size:24px;line-height:32px;font-weight:900;max-width:200px;padding-right:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.foot{top:1156px;text-align:right;font-size:20px;line-height:24px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="sample" id="sample">示例数据</div>
+  <div class="abs top"><h1>AI 老板绩效考核报告</h1><div class="meta" id="meta"></div></div>
+  <div class="abs hero">
+    <div class="big" id="grade"></div>
+    <div class="side">
+      <div class="lab">总评 · 平均分</div>
+      <div class="avg" id="avg"></div>
+      <div class="stampwrap"><div class="stamp" id="persona"></div></div>
+      <div class="summary" id="summary"></div>
+    </div>
+  </div>
+  <div class="abs grid" id="grid"></div>
+  <div class="abs comm"><div class="lab">总评语</div><p id="comm"></p></div>
+  <div class="abs note"><div class="lab">下周只练这一个</div><div class="h" id="habit"></div><div class="s" id="script"></div></div>
+  <div class="abs foot">本报告由 AI 根据对话记录生成，仅供娱乐和自我改进</div>
+</div>
+
+<script>
+/* ===== 计算逻辑（三版通用，与上一版一致；不要改） =====
+   A=4 B=3 C=2 D=1 F=0；只算有分数的维度，平均后保留 1 位小数；
+   按 1 位小数换算：≥3.5 A｜≥2.5 B｜≥1.5 C｜≥0.5 D｜<0.5 F；
+   证据不足（grade 为 null）不计入；超过一半证据不足则不出总评。
+   排序：分数从低到高，同分保持原顺序，证据不足排最后；
+   最差项：分数等于最低分的所有项（并列都标强调色）。 */
+function computeReport(R){
+  const PTS = {A:4,B:3,C:2,D:1,F:0};
+  const dims = R.dimensions.map((d,i)=>({...d, i, ok: Object.prototype.hasOwnProperty.call(PTS, d.grade)}));
+  const scored = dims.filter(d=>d.ok);
+  const na = dims.length - scored.length;
+  let avg = null, overall = null;
+  if (scored.length && na <= dims.length/2){
+    avg = Math.round(scored.reduce((s,d)=>s+PTS[d.grade],0)/scored.length*10)/10;
+    overall = avg>=3.5?"A":avg>=2.5?"B":avg>=1.5?"C":avg>=0.5?"D":"F";
+  }
+  dims.sort((a,b)=>(a.ok?PTS[a.grade]:99)-(b.ok?PTS[b.grade]:99) || a.i-b.i);
+  const worst = scored.length ? Math.min(...scored.map(d=>PTS[d.grade])) : null;
+  dims.forEach(d=>{
+    d.pts = d.ok ? PTS[d.grade] : null;
+    d.fill = d.ok ? [0,.25,.5,.75,1][d.pts] : 0;          // F 由最小宽度留一点
+    d.worst = d.ok && d.pts === worst;
+    d.naText = Number.isFinite(d.occasions) ? `证据不足 · 相关场合只有 ${d.occasions} 次，暂不评分` : "证据不足 · 相关场合少于 3 次，暂不评分";
+  });
+  return {dims, avg, overall, scoredCount: scored.length, naCount: na};
+}
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function fitText(el, from, to){ for (let fs=from; fs>=to && el.scrollWidth>el.clientWidth; fs-=2) el.style.fontSize=fs+"px"; }
+function markClipped(sel1, sel2){
+  const c = [...document.querySelectorAll(sel1)].filter(e=>e.scrollWidth>e.clientWidth+1)
+    .concat([...document.querySelectorAll(sel2)].filter(e=>e.scrollHeight>e.clientHeight+3))
+    .map(e=>e.className+":"+e.textContent.slice(0,10));
+  document.body.dataset.clipped = JSON.stringify(c);
+}
+
+
+(function(){
+  const R = REPORT, C = computeReport(R), $ = id => document.getElementById(id);
+  $("sample").style.display = R.isSample ? "" : "none";
+  $("meta").textContent = `${R.date} · 基于 ${R.conversations} 段对话`;
+  if (C.overall){ $("grade").textContent = C.overall; $("avg").innerHTML = `<b>${C.avg.toFixed(1)}</b><span>/ 4.0 · ${C.scoredCount} 项计分</span>`; }
+  else { $("grade").textContent = "?"; $("grade").classList.add("none"); $("avg").innerHTML = `<b>—</b><span>证据不足，需要更多对话</span>`; }
+  $("persona").textContent = R.persona; $("summary").textContent = R.summary;
+  $("grid").innerHTML = C.dims.map(d=>`<div class="cell ${d.ok?"":"na"} ${d.worst?"worst":""}">
+    <div class="t"><span class="n">${esc(d.name)}</span><span class="g ${d.ok?"":"na"}">${d.ok ? d.grade : "证据不足"}</span></div>
+    ${d.ok ? `<div class="bar"><i style="width:${d.fill*100}%"></i></div>` : `<div class="bar na"></div>`}</div>`).join("");
+  $("comm").textContent = R.commentary || "";
+  $("habit").textContent = R.focus.habit; $("script").textContent = R.focus.script;
+  fitText($("persona"), 30, 22);
+  markClipped(".n,.stamp,.h", ".summary,.s,#comm");
+})();
+
+</script>
+</body>
+</html>
