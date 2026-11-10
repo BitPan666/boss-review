@@ -15,7 +15,7 @@
 用的是 Claude Code、Codex、Cursor 这种**能自己执行命令**的 AI 的话，把下面整段复制给它，它会自己装好：
 
 ```
-请从这个仓库安装 boss-review：https://github.com/BitPan666/boss-review 。把 skills/boss-review 整个文件夹（含里面的 assets）原样复制到我的用户 skill 目录，不要改文件内容。Claude Code 放到 ~/.claude/skills/boss-review ，Codex 放到 ~/.agents/skills/boss-review ，Cursor 放到 ~/.cursor/skills/boss-review 。你是哪一种，就放到对应的那个目录；分不清就三个都放一份。装好后告诉我。
+请从这个仓库安装 boss-review：https://github.com/BitPan666/boss-review 。把 skills/boss-review 整个文件夹（含里面的 assets 和 scripts）原样复制到我的用户 skill 目录，不要改文件内容。Claude Code 放到 ~/.claude/skills/boss-review ，Codex 放到 ~/.agents/skills/boss-review ，Cursor 放到 ~/.cursor/skills/boss-review 。你是哪一种，就放到对应的那个目录；分不清就先确认当前工具。装好后告诉我。
 ```
 
 `~` 就是你的用户主目录。Windows 上一般是 `C:\Users\你的用户名`。
@@ -32,7 +32,7 @@
 
 1. 打开 Settings → Capabilities，确认 **Code execution and file creation** 已经打开。新版设置里这项叫 **Create and edit files**。技能要靠它才能用。
 2. Team 和 Enterprise：组织所有者要先到 Organization settings → Plugins & skills → Policy，把 **Cloud code execution and file creation** 和 **Skills** 都打开。Team 默认是开的。所有者如果关掉了「用户自己创建技能」，上传入口会消失。
-3. 下载本仓库里的 [`boss-review.zip`](boss-review.zip)。压缩包第一层就是 `boss-review` 文件夹，里面有 `SKILL.md` 和 `assets`。不用自己再打包。
+3. 下载本仓库里的 [`boss-review.zip`](boss-review.zip)。压缩包第一层就是 `boss-review` 文件夹，里面有 `SKILL.md`、`assets` 和 `scripts`。不用自己再打包。
 4. 打开 Customize → Skills，点「+」，再点「+ Create skill」，选 **Upload a skill**，上传这个 zip。
 5. 在技能列表里把它打开。然后说「给我这个老板打个分」。也可以在输入框打 `/` 来找技能。
 
@@ -142,12 +142,20 @@ gemini extensions install https://github.com/BitPan666/boss-review
 
 ## 怎么用
 
-1. 装好或贴好提示词之后，说「给我这个老板打个分」。
-2. 它如果能读到你和 AI 的历史对话，会先告诉你读了哪些、大概多少段，再打分。
-3. 读不到的话，它会停下来让你贴几段完整的来回。贴得越多越准。
-4. 你会先拿到一份文字成绩单（每项有原话），再拿到一张 1400×1980 的成绩单图。能跑无头浏览器就按技能里的命令截图；截不出来就按同一版式给你文字版，不会把 HTML 交给你。
-5. 想和上次比，把上次的成绩单一并贴进去。
+1. 安装后说「给我这个老板打个分」。默认按消息时间评估当前平台近 30 天的对话。Codex 和 Claude Code 可用随 Skill 安装的脚本读取本机记录。其他平台以当前可访问的记录为准；读不到时可以贴几段完整对话。
+2. 报告会说明实际使用的时间范围和对话数。八项维度分别评估，证据不足的项不计分；总评为 A–E，证据不足过半显示「?」。
+3. 报告给出脱敏的文字证据和一张固定版式的 A4 PNG。PNG 需要 Python 3.10+、Python Playwright 和 Chrome/Chromium；浏览器或脚本不可用时交文字版。
+4. 想和上次比，可以把上次的成绩单一并贴进去。
+
+### 在源码仓库验证出图
+
+```bash
+python3 -m unittest discover -s tests -v
+python3 scripts/render_report.py --samples
+```
+
+第一条用合成数据，不需要浏览器。第二条需要 Playwright、Chrome/Chromium 和 Pillow，并生成五张对照图。可用 `CHROME` 指定浏览器路径，包括 Playwright 安装的 `chrome-headless-shell`。受限环境若无法启动多进程，使用该无头浏览器验证时可设置 `BOSS_REVIEW_SINGLE_PROCESS=1`。安装包中的出图脚本支持 `--json report.json -o report.png`；开发时需要检查模板，可使用 `--html-output report.html`。
 
 ## 隐私
 
-它只出报告，不改你的文件、设置、记忆或项目指令。对话记录只在你自己的 AI 里处理，这个仓库不收集、也不上传你的聊天。引用原话时，它会被要求避开密码、手机号和公司机密。成绩单供娱乐和自我改进，不是人事评价。
+只有在发起评分时才读取所选来源。采集和出图脚本无需联网，分析仍由你使用的 AI 服务处理。图片只放分数和评语，原话证据只出现在文字版并做脱敏。分享前请确认报告里没有你不想公开的信息。
