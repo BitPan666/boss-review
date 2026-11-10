@@ -21,6 +21,7 @@
   --dash:#ADA89C;
   --hair:#D9D5CB;
   --paper:#F9F7F1;
+  --body:#42413B;
   --sans:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Noto Sans CJK SC","Source Han Sans SC","Microsoft YaHei",sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -36,17 +37,20 @@ h1{
   font-size:86px;line-height:1;font-weight:600;letter-spacing:1.15px;
 }
 .meta{
-  position:absolute;left:88px;top:216px;
+  position:absolute;left:88px;top:216px;max-width:880px;
   font-size:30px;line-height:36px;color:var(--muted);font-weight:400;letter-spacing:0.3px;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
 }
 .badge{
-  position:absolute;top:208px;right:88px;height:56px;
+  position:absolute;top:208px;right:88px;height:56px;max-width:320px;
   padding:0 42px 0 36px;border-radius:28px;
   background:var(--card);color:var(--accent);
   display:flex;align-items:center;gap:12px;
   font-size:26px;font-weight:600;letter-spacing:1px;
+  overflow:hidden;
 }
 .badge i{width:12px;height:12px;border-radius:50%;background:var(--accent);flex:none}
+.badge span{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .hero{
   position:absolute;left:88px;top:312px;width:1224px;height:332px;
   background:var(--card);border-radius:16px;
@@ -59,23 +63,27 @@ h1{
 .score{position:absolute;left:248px;top:60px;width:320px}
 .kicker{font-size:26px;line-height:28px;font-weight:600;letter-spacing:0.6px}
 .kicker.accent{color:var(--accent)}
-.kicker.muted{color:var(--muted);font-weight:500;letter-spacing:0.4px}
+.kicker.muted{color:var(--muted);font-weight:600;letter-spacing:0.4px}
 .scoreline{margin-top:36px;display:flex;align-items:baseline;gap:16px}
 .scoreline b{
   font-family:Inter,sans-serif;font-weight:800;font-size:104px;line-height:0.72;
   letter-spacing:-2px;color:var(--ink);
 }
+.scoreline b.dash{color:#6E6A62;letter-spacing:0}
 .unit{font-size:32px;line-height:1;font-weight:500;color:var(--ink)}
 .few{margin-top:18px;font-size:20px;line-height:28px;color:var(--muted);font-weight:400}
 .vrule{position:absolute;left:576px;top:48px;width:2px;height:236px;background:var(--hair)}
-.portrait{position:absolute;left:652px;top:54px;width:540px}
+.portrait{position:absolute;left:616px;top:54px;width:560px}
 .portrait h2{
   margin-top:28px;color:var(--accent);
   font-size:46px;line-height:54px;font-weight:600;letter-spacing:0.2px;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
 }
 .portrait p{
-  margin-top:22px;width:496px;
-  font-size:30px;line-height:54px;font-weight:400;color:var(--ink);
+  margin-top:22px;width:560px;max-height:108px;
+  font-size:34px;line-height:54px;font-weight:400;color:var(--body);
+  white-space:pre-line;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
 }
 .head h2{
   position:absolute;left:88px;top:708px;
@@ -93,9 +101,10 @@ h1{
 }
 .cell{height:86px}
 .nrow{height:32px;display:flex;align-items:flex-end;justify-content:space-between}
-.nrow .n{font-size:30px;line-height:32px;font-weight:500;letter-spacing:0.2px}
+.nrow .n{font-size:30px;line-height:32px;font-weight:600;letter-spacing:0.2px}
 .nrow .g{font-size:30px;line-height:32px;font-weight:600}
 .nrow .g.na{font-size:24px;font-weight:400;color:var(--muted);padding-bottom:1px}
+.cell.na .n{color:var(--muted)}
 .cell.low .n,.cell.low .g{color:var(--accent)}
 .bar{margin-top:15px;height:6px;border-radius:3px;background:var(--track);overflow:hidden}
 .bar i{display:block;height:6px;border-radius:3px;background:var(--bar);min-width:6px}
@@ -107,22 +116,32 @@ h1{
 }
 .comm-lab{position:absolute;left:88px;top:1210px;font-size:46px;line-height:52px;font-weight:600;letter-spacing:0.4px}
 .comm{
-  position:absolute;left:88px;top:1290px;width:1224px;
-  font-size:38px;line-height:64px;font-weight:400;color:var(--ink);
+  position:absolute;left:88px;top:1290px;width:1224px;max-height:192px;
+  font-size:38px;line-height:64px;font-weight:400;color:var(--body);
+  overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;
 }
 .bottom{position:absolute;left:88px;top:1530px;width:1224px;display:flex;gap:86px;align-items:flex-start}
 .practice{
   margin-top:8px;width:812px;height:316px;background:var(--card);border-radius:16px;
-  position:relative;padding:38px 56px 32px 48px;
+  position:relative;padding:38px 56px 32px 40px;min-width:0;overflow:hidden;
 }
 .practice .accent{
   position:absolute;left:0;top:31px;width:6px;height:254px;background:var(--accent);
   border-radius:0 3px 3px 0;
 }
 .practice .lab{font-size:26px;line-height:32px;font-weight:600;color:var(--accent)}
-.practice h3{margin-top:16px;font-size:50px;line-height:58px;font-weight:600}
-.practice .script{margin-top:20px;width:668px;font-size:30px;line-height:54px;font-weight:400;color:var(--ink)}
-.qrcol{width:280px}
+.practice h3{
+  margin-top:16px;font-size:50px;line-height:58px;font-weight:600;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+.practice .script{
+  margin-top:20px;width:710px;max-height:108px;
+  font-size:32px;line-height:54px;font-weight:400;color:var(--body);
+  overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
+.qrcol{width:280px;flex:none}
 .qrcard{
   width:280px;height:280px;background:#fff;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
@@ -143,10 +162,10 @@ h1{
 <div class="badge" id="badge"><i></i><span id="badgeText"></span></div>
 
 <section class="hero">
-  <div class="grade" id="grade">A</div>
+  <div class="grade" id="grade"></div>
   <div class="score">
     <div class="kicker accent">总评 / 平均分</div>
-    <div class="scoreline"><b id="avg">93</b><span class="unit">分 / 100</span></div>
+    <div class="scoreline"><b id="avg"></b><span class="unit">分 / 100</span></div>
     <div class="few" id="few" hidden>计分项偏少，仅供参考</div>
   </div>
   <div class="vrule"></div>
@@ -183,18 +202,24 @@ h1{
 <div class="foot">本报告由 AI 根据对话记录生成，仅供娱乐和自我改进</div>
 
 <script>
+window.addEventListener("error", (ev) => {
+  document.body.dataset.renderError = (ev && ev.message) || "脚本出错";
+});
+</script>
+<script>
 /* =====================================================================
    只改下面这个 REPORT。主题色、平均分、总评等级、最低项高亮、进度条
    都由后面的脚本计算，不要手填，也不要改样式。
-   date            日期，原样显示，如 "2026年11月9日"
-   conversations   对话段数 N
-   badge           右上角胶囊。示例填 "示例数据"；真实报告填 null 去掉
-   grades          八项等级："A"|"B"|"C"|"D"|"E"|"F"，证据不足填 null
-   portraitTitle   老板画像标题，短、有梗，十个字上下
-   portraitText    画像描述，一两句
-   commentary      总评语，两三行
-   focusTitle      下周只练这一个的标题
-   focusScript     一句可以照着说的话，连同「」一起写
+   字数是上限。再长会被省略号截断，不要指望多写还能完整显示。
+   date            日期，原样显示，最多 16 个字。如 "2026年11月9日"
+   conversations   对话段数，最多 4 位整数。缺 date 或 conversations 时那一段留空
+   badge           右上角胶囊，最多 6 个字。示例填 "示例数据"；真实报告填 null 去掉
+   grades          八项等级：A–F，不区分大小写。证据不足填 null。别的值会报错
+   portraitTitle   老板画像标题，一行，最多 11 个字
+   portraitText    画像描述，最多 32 个字、两行。需要手动断行时在字符串里写 \n
+   commentary      总评语，最多 90 个字、三行
+   focusTitle      下周只练这一个的标题，一行，最多 14 个字
+   focusScript     一句可以照着说的话，连同「」一起写，最多 42 个字、两行
    ===================================================================== */
 const REPORT = {
   "date": "2026年11月9日",
@@ -239,24 +264,50 @@ function overallOf(score){
   if (score >= 20) return "D";
   return "E";
 }
+function normalizeGrade(g, item){
+  if (g === null || g === undefined) return null;
+  if (typeof g !== "string"){
+    throw new Error("「" + item + "」的等级必须是 A–F 或 null，得到 " + JSON.stringify(g));
+  }
+  const u = g.trim().toUpperCase();
+  if (!Object.prototype.hasOwnProperty.call(SCORE, u)){
+    throw new Error("「" + item + "」的等级「" + g + "」无法识别，只能是 A–F 或 null");
+  }
+  return u;
+}
 function compute(report){
   const grades = report.grades || {};
+  const normalized = {};
   let half = 0, scored = 0, na = 0;
   let worst = null, worstName = null;
+  const seen = [];
   for (const name of ORDER){
-    const g = grades[name];
-    if (!Object.prototype.hasOwnProperty.call(SCORE, g)){ na++; continue; }
+    const raw = Object.prototype.hasOwnProperty.call(grades, name) ? grades[name] : null;
+    const g = normalizeGrade(raw, name);
+    normalized[name] = g;
+    if (g === null){ na++; continue; }
     scored++;
+    seen.push(g);
     half += HALF[g];
     const s = SCORE[g];
     if (worst === null || s < worst){ worst = s; worstName = name; }
   }
+  if (seen.length && seen.every(x => x === seen[0])) worstName = null;
   const avg = scored ? roundHalfUp(half, scored) : null;
   const overall = na * 2 > ORDER.length ? "?" : (avg === null ? "?" : overallOf(avg));
-  return {avg, overall, scored, na, worstName};
+  return {avg, overall, scored, na, worstName, grades: normalized};
 }
-function esc(s){
-  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function metaText(report){
+  const parts = [];
+  if (report.date !== null && report.date !== undefined && String(report.date).trim() !== ""){
+    parts.push(String(report.date).trim());
+  }
+  const c = report.conversations;
+  if (c !== null && c !== undefined && c !== "") parts.push("基于 " + c + " 段对话");
+  return parts.join(" · ");
+}
+function fillText(id, value){
+  document.getElementById(id).textContent = value == null ? "" : String(value);
 }
 
 (function(){
@@ -267,37 +318,63 @@ function esc(s){
   root.style.setProperty("--accent", theme.accent);
   root.style.setProperty("--card", theme.card);
 
-  document.getElementById("meta").textContent = `${R.date} · 基于 ${R.conversations} 段对话`;
+  document.getElementById("meta").textContent = metaText(R);
   const badge = document.getElementById("badge");
-  if (R.badge) document.getElementById("badgeText").textContent = R.badge;
+  if (R.badge) document.getElementById("badgeText").textContent = String(R.badge);
   else badge.style.display = "none";
 
   document.getElementById("grade").textContent = C.overall;
-  document.getElementById("avg").textContent = C.avg === null ? "—" : String(C.avg);
+  const avgEl = document.getElementById("avg");
+  if (C.overall === "?"){
+    avgEl.textContent = "—";
+    avgEl.classList.add("dash");
+  } else {
+    avgEl.textContent = String(C.avg);
+    avgEl.classList.remove("dash");
+  }
   document.getElementById("few").hidden = !(C.scored < 5);
-  document.getElementById("portraitTitle").textContent = R.portraitTitle || "";
-  document.getElementById("portraitText").textContent = R.portraitText || "";
+  fillText("portraitTitle", R.portraitTitle);
+  fillText("portraitText", R.portraitText);
   document.getElementById("count").textContent = `${C.scored} 项计分 · ${C.na} 项待观察`;
-  document.getElementById("comm").textContent = R.commentary || "";
-  document.getElementById("focusTitle").textContent = R.focusTitle || "";
-  document.getElementById("focusScript").textContent = R.focusScript || "";
+  fillText("comm", R.commentary);
+  fillText("focusTitle", R.focusTitle);
+  fillText("focusScript", R.focusScript);
 
-  const grades = R.grades || {};
-  document.getElementById("grid").innerHTML = ORDER.map(name => {
-    const g = grades[name];
-    const ok = Object.prototype.hasOwnProperty.call(SCORE, g);
-    const low = ok && name === C.worstName;
-    if (!ok){
-      return `<div class="cell na"><div class="nrow"><span class="n">${esc(name)}</span><span class="g na">证据不足</span></div><div class="bar na"></div></div>`;
+  const grid = document.getElementById("grid");
+  grid.replaceChildren();
+  for (const name of ORDER){
+    const g = C.grades[name];
+    const cell = document.createElement("div");
+    const low = g !== null && name === C.worstName;
+    cell.className = "cell" + (g === null ? " na" : low ? " low" : "");
+    const nrow = document.createElement("div");
+    nrow.className = "nrow";
+    const n = document.createElement("span");
+    n.className = "n";
+    n.textContent = name;
+    const grade = document.createElement("span");
+    grade.className = g === null ? "g na" : "g";
+    grade.textContent = g === null ? "证据不足" : g;
+    nrow.append(n, grade);
+    const bar = document.createElement("div");
+    if (g === null){
+      bar.className = "bar na";
+    } else {
+      bar.className = "bar";
+      const i = document.createElement("i");
+      i.style.width = SCORE[g] + "%";
+      bar.append(i);
     }
-    return `<div class="cell${low ? " low" : ""}"><div class="nrow"><span class="n">${esc(name)}</span><span class="g">${esc(g)}</span></div><div class="bar"><i style="width:${SCORE[g]}%"></i></div></div>`;
-  }).join("");
+    cell.append(nrow, bar);
+    grid.append(cell);
+  }
 
   document.body.dataset.overall = C.overall;
   document.body.dataset.avg = C.avg === null ? "" : String(C.avg);
   document.body.dataset.low = C.worstName || "";
   document.body.dataset.scored = String(C.scored);
   document.body.dataset.na = String(C.na);
+  document.body.dataset.rendered = "ok";
 })();
 </script>
 </body>
