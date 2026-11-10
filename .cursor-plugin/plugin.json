@@ -1,0 +1,12 @@
+{
+  "name": "boss-review",
+  "description": "按 8 个习惯给你当 AI 老板打分，引用原话，并生成一张固定版式的绩效考核报告。",
+  "version": "2.0.0",
+  "author": {
+    "name": "BitPan666"
+  },
+  "homepage": "https://github.com/BitPan666/boss-review",
+  "repository": "https://github.com/BitPan666/boss-review",
+  "license": "MIT",
+  "keywords": ["boss-review", "skills"]
+}

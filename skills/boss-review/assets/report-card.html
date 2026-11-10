@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>AI 老板绩效考核报告</title>
+<style>
+@font-face{
+  font-family:"Inter";
+  src:url("fonts/Inter-ExtraBold.woff2") format("woff2");
+  font-weight:800;
+  font-style:normal;
+  font-display:block;
+}
+:root{
+  --accent:#146044;
+  --card:#E6F0E9;
+  --ink:#22211E;
+  --muted:#646159;
+  --bar:#45443E;
+  --track:#E4E0D6;
+  --dash:#ADA89C;
+  --hair:#D9D5CB;
+  --paper:#F9F7F1;
+  --sans:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Noto Sans CJK SC","Source Han Sans SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1400px;height:1980px;background:var(--paper)}
+body{
+  position:relative;overflow:hidden;color:var(--ink);background:var(--paper);
+  font-family:var(--sans);font-weight:400;
+  -webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;
+}
+.topbar{position:absolute;left:0;right:0;top:0;height:12px;background:var(--accent)}
+h1{
+  position:absolute;left:88px;top:98px;
+  font-size:86px;line-height:1;font-weight:600;letter-spacing:1.15px;
+}
+.meta{
+  position:absolute;left:88px;top:216px;
+  font-size:30px;line-height:36px;color:var(--muted);font-weight:400;letter-spacing:0.3px;
+}
+.badge{
+  position:absolute;top:208px;right:88px;height:56px;
+  padding:0 42px 0 36px;border-radius:28px;
+  background:var(--card);color:var(--accent);
+  display:flex;align-items:center;gap:12px;
+  font-size:26px;font-weight:600;letter-spacing:1px;
+}
+.badge i{width:12px;height:12px;border-radius:50%;background:var(--accent);flex:none}
+.hero{
+  position:absolute;left:88px;top:312px;width:1224px;height:332px;
+  background:var(--card);border-radius:16px;
+}
+.grade{
+  position:absolute;left:34px;top:78px;
+  font-family:Inter,sans-serif;font-weight:800;font-size:200px;line-height:0.74;
+  color:var(--accent);letter-spacing:-2px;
+}
+.score{position:absolute;left:248px;top:60px;width:320px}
+.kicker{font-size:26px;line-height:28px;font-weight:600;letter-spacing:0.6px}
+.kicker.accent{color:var(--accent)}
+.kicker.muted{color:var(--muted);font-weight:500;letter-spacing:0.4px}
+.scoreline{margin-top:36px;display:flex;align-items:baseline;gap:16px}
+.scoreline b{
+  font-family:Inter,sans-serif;font-weight:800;font-size:104px;line-height:0.72;
+  letter-spacing:-2px;color:var(--ink);
+}
+.unit{font-size:32px;line-height:1;font-weight:500;color:var(--ink)}
+.few{margin-top:18px;font-size:20px;line-height:28px;color:var(--muted);font-weight:400}
+.vrule{position:absolute;left:576px;top:48px;width:2px;height:236px;background:var(--hair)}
+.portrait{position:absolute;left:652px;top:54px;width:540px}
+.portrait h2{
+  margin-top:28px;color:var(--accent);
+  font-size:46px;line-height:54px;font-weight:600;letter-spacing:0.2px;
+}
+.portrait p{
+  margin-top:22px;width:496px;
+  font-size:30px;line-height:54px;font-weight:400;color:var(--ink);
+}
+.head h2{
+  position:absolute;left:88px;top:708px;
+  font-size:46px;line-height:52px;font-weight:600;letter-spacing:0.4px;
+}
+.head .count{
+  position:absolute;right:88px;top:732px;
+  font-size:26px;line-height:32px;color:var(--muted);font-weight:400;
+}
+.hrule{position:absolute;left:88px;top:790px;width:1224px;height:3px;background:var(--ink)}
+.grid{
+  position:absolute;left:88px;top:817px;width:1224px;
+  display:grid;grid-template-columns:586px 586px;column-gap:52px;
+  grid-template-rows:repeat(4,86px);grid-auto-flow:column;
+}
+.cell{height:86px}
+.nrow{height:32px;display:flex;align-items:flex-end;justify-content:space-between}
+.nrow .n{font-size:30px;line-height:32px;font-weight:500;letter-spacing:0.2px}
+.nrow .g{font-size:30px;line-height:32px;font-weight:600}
+.nrow .g.na{font-size:24px;font-weight:400;color:var(--muted);padding-bottom:1px}
+.cell.low .n,.cell.low .g{color:var(--accent)}
+.bar{margin-top:15px;height:6px;border-radius:3px;background:var(--track);overflow:hidden}
+.bar i{display:block;height:6px;border-radius:3px;background:var(--bar);min-width:6px}
+.cell.low .bar i{background:var(--accent)}
+.bar.na{background:none;overflow:visible;position:relative}
+.bar.na::after{
+  content:"";position:absolute;left:0;right:0;top:2px;height:2px;
+  background:repeating-linear-gradient(90deg,var(--dash) 0 6px,transparent 6px 14px);
+}
+.comm-lab{position:absolute;left:88px;top:1210px;font-size:46px;line-height:52px;font-weight:600;letter-spacing:0.4px}
+.comm{
+  position:absolute;left:88px;top:1290px;width:1224px;
+  font-size:38px;line-height:64px;font-weight:400;color:var(--ink);
+}
+.bottom{position:absolute;left:88px;top:1530px;width:1224px;display:flex;gap:86px;align-items:flex-start}
+.practice{
+  margin-top:8px;width:812px;height:316px;background:var(--card);border-radius:16px;
+  position:relative;padding:38px 56px 32px 48px;
+}
+.practice .accent{
+  position:absolute;left:0;top:31px;width:6px;height:254px;background:var(--accent);
+  border-radius:0 3px 3px 0;
+}
+.practice .lab{font-size:26px;line-height:32px;font-weight:600;color:var(--accent)}
+.practice h3{margin-top:16px;font-size:50px;line-height:58px;font-weight:600}
+.practice .script{margin-top:20px;width:668px;font-size:30px;line-height:54px;font-weight:400;color:var(--ink)}
+.qrcol{width:280px}
+.qrcard{
+  width:280px;height:280px;background:#fff;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.qrcard img{width:256px;height:256px;display:block}
+.qrcap{
+  margin-top:18px;margin-left:-40px;width:360px;
+  text-align:center;font-size:22px;line-height:28px;color:var(--muted);white-space:nowrap;
+}
+.fline{position:absolute;left:88px;top:1896px;width:1224px;height:2px;background:var(--hair)}
+.foot{position:absolute;left:88px;top:1922px;font-size:24px;line-height:30px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="topbar"></div>
+<h1>AI 老板绩效考核报告</h1>
+<div class="meta" id="meta"></div>
+<div class="badge" id="badge"><i></i><span id="badgeText"></span></div>
+
+<section class="hero">
+  <div class="grade" id="grade">A</div>
+  <div class="score">
+    <div class="kicker accent">总评 / 平均分</div>
+    <div class="scoreline"><b id="avg">93</b><span class="unit">分 / 100</span></div>
+    <div class="few" id="few" hidden>计分项偏少，仅供参考</div>
+  </div>
+  <div class="vrule"></div>
+  <div class="portrait">
+    <div class="kicker muted">老板画像</div>
+    <h2 id="portraitTitle"></h2>
+    <p id="portraitText"></p>
+  </div>
+</section>
+
+<div class="head">
+  <h2>分项评分</h2>
+  <div class="count" id="count"></div>
+</div>
+<div class="hrule"></div>
+<div class="grid" id="grid"></div>
+
+<div class="comm-lab">总评语</div>
+<p class="comm" id="comm"></p>
+
+<div class="bottom">
+  <div class="practice">
+    <div class="accent"></div>
+    <div class="lab">下周只练这一个</div>
+    <h3 id="focusTitle"></h3>
+    <p class="script" id="focusScript"></p>
+  </div>
+  <div class="qrcol">
+    <div class="qrcard"><img src="qr.png" alt="BitPan.AI 小红书二维码"></div>
+    <div class="qrcap">关注 BitPan.AI 获取更多 AI 资讯</div>
+  </div>
+</div>
+<div class="fline"></div>
+<div class="foot">本报告由 AI 根据对话记录生成，仅供娱乐和自我改进</div>
+
+<script>
+/* =====================================================================
+   只改下面这个 REPORT。主题色、平均分、总评等级、最低项高亮、进度条
+   都由后面的脚本计算，不要手填，也不要改样式。
+   date            日期，原样显示，如 "2026年11月9日"
+   conversations   对话段数 N
+   badge           右上角胶囊。示例填 "示例数据"；真实报告填 null 去掉
+   grades          八项等级："A"|"B"|"C"|"D"|"E"|"F"，证据不足填 null
+   portraitTitle   老板画像标题，短、有梗，十个字上下
+   portraitText    画像描述，一两句
+   commentary      总评语，两三行
+   focusTitle      下周只练这一个的标题
+   focusScript     一句可以照着说的话，连同「」一起写
+   ===================================================================== */
+const REPORT = {
+  "date": "2026年11月9日",
+  "conversations": 23,
+  "badge": "示例数据",
+  "grades": {
+    "交代任务": "A",
+    "给参考样例": "A",
+    "先问后做": "B",
+    "验收再收": "B",
+    "拆任务": "A",
+    "反馈具体": "A",
+    "放手程度": "A",
+    "把纠错变成规矩": null
+  },
+  "portraitTitle": "给方向也给空间",
+  "portraitText": "开工前把方向讲清楚，执行时放手，关键节点再一起确认。",
+  "commentary": "目标、用途和参考都到位，AI 一开工就知道往哪走。任务拆得清楚，反馈也能落到具体改动。下次可以在验收后记下一条可复用的标准，省掉下一轮重复沟通。",
+  "focusTitle": "把反馈沉淀成规则",
+  "focusScript": "「这次通过的标准是 X。把它补进检查清单，下次交付前先自查。」"
+};
+
+const ORDER = ["交代任务","给参考样例","先问后做","验收再收","拆任务","反馈具体","放手程度","把纠错变成规矩"];
+const HALF = {A:200, B:150, C:100, D:50, E:25, F:0};
+const SCORE = {A:100, B:75, C:50, D:25, E:12.5, F:0};
+const THEME = {
+  A: {accent:"#146044", card:"#E6F0E9"},
+  B: {accent:"#46651F", card:"#ECF0E2"},
+  C: {accent:"#8A5A06", card:"#F7EED8"},
+  D: {accent:"#A84718", card:"#F7E8DE"},
+  E: {accent:"#A5372F", card:"#F7E5E2"},
+  "?": {accent:"#6E6A62", card:"#EEECE6"}
+};
+
+function roundHalfUp(halfSum, n){
+  return Math.floor((halfSum + n) / (2 * n));
+}
+function overallOf(score){
+  if (score >= 88) return "A";
+  if (score >= 63) return "B";
+  if (score >= 45) return "C";
+  if (score >= 20) return "D";
+  return "E";
+}
+function compute(report){
+  const grades = report.grades || {};
+  let half = 0, scored = 0, na = 0;
+  let worst = null, worstName = null;
+  for (const name of ORDER){
+    const g = grades[name];
+    if (!Object.prototype.hasOwnProperty.call(SCORE, g)){ na++; continue; }
+    scored++;
+    half += HALF[g];
+    const s = SCORE[g];
+    if (worst === null || s < worst){ worst = s; worstName = name; }
+  }
+  const avg = scored ? roundHalfUp(half, scored) : null;
+  const overall = na * 2 > ORDER.length ? "?" : (avg === null ? "?" : overallOf(avg));
+  return {avg, overall, scored, na, worstName};
+}
+function esc(s){
+  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+(function(){
+  const R = REPORT;
+  const C = compute(R);
+  const theme = THEME[C.overall] || THEME["?"];
+  const root = document.documentElement;
+  root.style.setProperty("--accent", theme.accent);
+  root.style.setProperty("--card", theme.card);
+
+  document.getElementById("meta").textContent = `${R.date} · 基于 ${R.conversations} 段对话`;
+  const badge = document.getElementById("badge");
+  if (R.badge) document.getElementById("badgeText").textContent = R.badge;
+  else badge.style.display = "none";
+
+  document.getElementById("grade").textContent = C.overall;
+  document.getElementById("avg").textContent = C.avg === null ? "—" : String(C.avg);
+  document.getElementById("few").hidden = !(C.scored < 5);
+  document.getElementById("portraitTitle").textContent = R.portraitTitle || "";
+  document.getElementById("portraitText").textContent = R.portraitText || "";
+  document.getElementById("count").textContent = `${C.scored} 项计分 · ${C.na} 项待观察`;
+  document.getElementById("comm").textContent = R.commentary || "";
+  document.getElementById("focusTitle").textContent = R.focusTitle || "";
+  document.getElementById("focusScript").textContent = R.focusScript || "";
+
+  const grades = R.grades || {};
+  document.getElementById("grid").innerHTML = ORDER.map(name => {
+    const g = grades[name];
+    const ok = Object.prototype.hasOwnProperty.call(SCORE, g);
+    const low = ok && name === C.worstName;
+    if (!ok){
+      return `<div class="cell na"><div class="nrow"><span class="n">${esc(name)}</span><span class="g na">证据不足</span></div><div class="bar na"></div></div>`;
+    }
+    return `<div class="cell${low ? " low" : ""}"><div class="nrow"><span class="n">${esc(name)}</span><span class="g">${esc(g)}</span></div><div class="bar"><i style="width:${SCORE[g]}%"></i></div></div>`;
+  }).join("");
+
+  document.body.dataset.overall = C.overall;
+  document.body.dataset.avg = C.avg === null ? "" : String(C.avg);
+  document.body.dataset.low = C.worstName || "";
+  document.body.dataset.scored = String(C.scored);
+  document.body.dataset.na = String(C.na);
+})();
+</script>
+</body>
+</html>
