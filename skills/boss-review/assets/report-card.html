@@ -43,7 +43,7 @@ h1{
 }
 .badge{
   position:absolute;top:208px;right:88px;height:56px;max-width:320px;
-  padding:0 42px 0 36px;border-radius:28px;
+  padding:0 52px 0 26px;border-radius:28px;
   background:var(--card);color:var(--accent);
   display:flex;align-items:center;gap:12px;
   font-size:26px;font-weight:600;letter-spacing:1px;
@@ -61,22 +61,25 @@ h1{
   color:var(--accent);letter-spacing:-2px;
 }
 .score{position:absolute;left:248px;top:60px;width:320px}
-.kicker{font-size:26px;line-height:28px;font-weight:600;letter-spacing:0.6px}
-.kicker.accent{color:var(--accent)}
+.kicker{font-size:29px;line-height:32px;font-weight:600;letter-spacing:0.4px}
+.kicker.accent{color:var(--accent);display:flex;align-items:baseline;gap:22px;letter-spacing:0;margin-left:6px}
 .kicker.muted{color:var(--muted);font-weight:600;letter-spacing:0.4px}
-.scoreline{margin-top:36px;display:flex;align-items:baseline;gap:16px}
+.scoreline{margin-top:39px;display:flex;align-items:baseline;gap:20px}
 .scoreline b{
-  font-family:Inter,sans-serif;font-weight:800;font-size:104px;line-height:0.72;
-  letter-spacing:-2px;color:var(--ink);
+  font-family:Inter,sans-serif;font-weight:800;font-size:100px;line-height:0.75;
+  letter-spacing:5.8px;color:var(--ink);
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
 }
-.scoreline b.dash{color:#6E6A62;letter-spacing:0}
-.unit{font-size:32px;line-height:1;font-weight:500;color:var(--ink)}
+.scoreline b.dash{color:#6E6A62;letter-spacing:0;font-variant-numeric:normal}
+.unit{display:inline-flex;align-items:baseline;gap:13px;font-size:26px;line-height:1;font-weight:500;color:var(--body);letter-spacing:0}
+.unit .ud{font-family:Inter,sans-serif;font-weight:800;font-size:29px;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;letter-spacing:0}
 .few{margin-top:18px;font-size:20px;line-height:28px;color:var(--muted);font-weight:400}
 .vrule{position:absolute;left:576px;top:48px;width:2px;height:236px;background:var(--hair)}
 .portrait{position:absolute;left:616px;top:54px;width:560px}
 .portrait h2{
-  margin-top:28px;color:var(--accent);
-  font-size:46px;line-height:54px;font-weight:600;letter-spacing:0.2px;
+  margin-top:24px;color:var(--accent);
+  font-size:50px;line-height:54px;font-weight:600;letter-spacing:0.2px;
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
 }
 .portrait p{
@@ -100,10 +103,10 @@ h1{
   grid-template-rows:repeat(4,86px);grid-auto-flow:column;
 }
 .cell{height:86px}
-.nrow{height:32px;display:flex;align-items:flex-end;justify-content:space-between}
-.nrow .n{font-size:30px;line-height:32px;font-weight:600;letter-spacing:0.2px}
-.nrow .g{font-size:30px;line-height:32px;font-weight:600}
-.nrow .g.na{font-size:24px;font-weight:400;color:var(--muted);padding-bottom:1px}
+.nrow{height:34px;display:flex;align-items:flex-end;justify-content:space-between}
+.nrow .n{font-size:32px;line-height:34px;font-weight:600;letter-spacing:0.2px}
+.nrow .g{font-family:Inter,var(--sans);font-size:34px;line-height:34px;font-weight:800}
+.nrow .g.na{font-family:var(--sans);font-size:26px;line-height:28px;font-weight:400;color:var(--muted);padding-bottom:1px}
 .cell.na .n{color:var(--muted)}
 .cell.low .n,.cell.low .g{color:var(--accent)}
 .bar{margin-top:15px;height:6px;border-radius:3px;background:var(--track);overflow:hidden}
@@ -164,8 +167,8 @@ h1{
 <section class="hero">
   <div class="grade" id="grade"></div>
   <div class="score">
-    <div class="kicker accent">总评 / 平均分</div>
-    <div class="scoreline"><b id="avg"></b><span class="unit">分 / 100</span></div>
+    <div class="kicker accent"><span>总评</span><span>/</span><span>平均分</span></div>
+    <div class="scoreline"><b id="avg"></b><span class="unit"><span>分</span><span>/</span><span class="ud">100</span></span></div>
     <div class="few" id="few" hidden>计分项偏少，仅供参考</div>
   </div>
   <div class="vrule"></div>
@@ -201,26 +204,7 @@ h1{
 <div class="fline"></div>
 <div class="foot">本报告由 AI 根据对话记录生成，仅供娱乐和自我改进</div>
 
-<script>
-window.addEventListener("error", (ev) => {
-  document.body.dataset.renderError = (ev && ev.message) || "脚本出错";
-});
-</script>
-<script>
-/* =====================================================================
-   只改下面这个 REPORT。主题色、平均分、总评等级、最低项高亮、进度条
-   都由后面的脚本计算，不要手填，也不要改样式。
-   字数是上限。再长会被省略号截断，不要指望多写还能完整显示。
-   date            日期，原样显示，最多 16 个字。如 "2026年11月9日"
-   conversations   对话段数，最多 4 位整数。缺 date 或 conversations 时那一段留空
-   badge           右上角胶囊，最多 6 个字。示例填 "示例数据"；真实报告填 null 去掉
-   grades          八项等级：A–F，不区分大小写。证据不足填 null。别的值会报错
-   portraitTitle   老板画像标题，一行，最多 11 个字
-   portraitText    画像描述，最多 32 个字、两行。需要手动断行时在字符串里写 \n
-   commentary      总评语，最多 90 个字、三行
-   focusTitle      下周只练这一个的标题，一行，最多 14 个字
-   focusScript     一句可以照着说的话，连同「」一起写，最多 42 个字、两行
-   ===================================================================== */
+<textarea id="report-data" hidden readonly>
 const REPORT = {
   "date": "2026年11月9日",
   "conversations": 23,
@@ -241,7 +225,35 @@ const REPORT = {
   "focusTitle": "把反馈沉淀成规则",
   "focusScript": "「这次通过的标准是 X。把它补进检查清单，下次交付前先自查。」"
 };
-
+</textarea>
+<script>
+window.addEventListener("error", (ev) => {
+  document.body.dataset.renderError = (ev && ev.message) || "脚本出错";
+});
+</script>
+<script>
+/* =====================================================================
+   只改上面 textarea 里的 REPORT。主题色、平均分、总评等级、最低项高亮、
+   进度条都由脚本计算，不要手填，也不要改样式。数据按纯文本读入，再用
+   textContent 写到页面上，不会当成 HTML 执行。
+   字数是上限。再长会被省略号截断，不要指望多写还能完整显示。
+   date            日期，原样显示，最多 16 个字。如 "2026年11月9日"
+   conversations   对话段数，最多 4 位整数。缺 date 或 conversations 时那一段留空
+   badge           右上角胶囊，最多 6 个字。示例填 "示例数据"；真实报告填 null 去掉
+   grades          八项等级：A–F，不区分大小写。证据不足填 null。别的值会报错
+   portraitTitle   老板画像标题，一行，最多 11 个字
+   portraitText    画像描述，最多 32 个字、两行。\n 用来手动断行，每一段必须单独排进一行
+   commentary      总评语，最多 90 个字、三行
+   focusTitle      下周只练这一个的标题，一行，最多 14 个字
+   focusScript     一句可以照着说的话，连同「」一起写，最多 42 个字、两行
+   ===================================================================== */
+function loadReport(){
+  const raw = document.getElementById("report-data").textContent.trim();
+  const m = raw.match(/^const REPORT\s*=\s*(\{[\s\S]*\})\s*;?$/);
+  if (!m) throw new Error("脚本出错：找不到 REPORT");
+  try { return JSON.parse(m[1]); }
+  catch (err) { throw new Error("脚本出错：" + (err && err.message ? err.message : err)); }
+}
 const ORDER = ["交代任务","给参考样例","先问后做","验收再收","拆任务","反馈具体","放手程度","把纠错变成规矩"];
 const HALF = {A:200, B:150, C:100, D:50, E:25, F:0};
 const SCORE = {A:100, B:75, C:50, D:25, E:12.5, F:0};
@@ -309,9 +321,32 @@ function metaText(report){
 function fillText(id, value){
   document.getElementById(id).textContent = value == null ? "" : String(value);
 }
+function assertPortraitLines(text){
+  const value = text == null ? "" : String(text);
+  if (!value.includes("\n")) return;
+  const parts = value.split("\n");
+  const el = document.getElementById("portraitText");
+  if (parts.length > 2){
+    throw new Error("portraitText 排成了 " + parts.length + " 行，最多两行");
+  }
+  const cs = getComputedStyle(el);
+  const probe = document.createElement("span");
+  probe.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;font:" + cs.font + ";letter-spacing:" + cs.letterSpacing;
+  document.body.appendChild(probe);
+  try {
+    for (const part of parts){
+      probe.textContent = part;
+      if (probe.getBoundingClientRect().width > el.clientWidth + 1){
+        throw new Error("portraitText 有一段排不进一行，换行后会超过两行");
+      }
+    }
+  } finally {
+    probe.remove();
+  }
+}
 
 (function(){
-  const R = REPORT;
+  const R = loadReport();
   const C = compute(R);
   const theme = THEME[C.overall] || THEME["?"];
   const root = document.documentElement;
@@ -374,6 +409,7 @@ function fillText(id, value){
   document.body.dataset.low = C.worstName || "";
   document.body.dataset.scored = String(C.scored);
   document.body.dataset.na = String(C.na);
+  assertPortraitLines(R.portraitText);
   document.body.dataset.rendered = "ok";
 })();
 </script>

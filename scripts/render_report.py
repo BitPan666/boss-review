@@ -149,6 +149,13 @@ def screenshot(html_path: Path, png_path: Path, timeout_s: float = 30) -> None:
     png_path.parent.mkdir(parents=True, exist_ok=True)
     if png_path.exists():
         png_path.unlink()
+    html_text = html_path.read_text(encoding="utf-8")
+    lowered = html_text.lower()
+    # A raw </script> inside the report data would execute if it were in a
+    # script element. The template keeps the data in a textarea and allows
+    # exactly two script tags; anything else is rejected before Chrome runs.
+    if lowered.count("</script>") != 2 or lowered.count("<script") != 2:
+        raise SystemExit("页面脚本出错：HTML 里有未转义的 </script>，拒绝截图")
     timeout_ms = max(1, int(timeout_s * 1000))
     errors: list[str] = []
     console: list[str] = []
