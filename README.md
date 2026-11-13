@@ -12,17 +12,15 @@
 
 ## 一句话安装
 
-用的是 Claude Code、Codex、Cursor 这种**能自己执行命令**的 AI 的话，把下面整段复制给它，它会自己装好：
+在 Claude Code、Codex 或 Cursor 的 Agent 对话里，复制并发送这句话。
 
+```text
+请按 https://github.com/BitPan666/boss-review/blob/main/docs/install.md 为当前工具安装 boss-review Skill。
 ```
-请从这个仓库安装 boss-review：https://github.com/BitPan666/boss-review 。把 skills/boss-review 整个文件夹（含里面的 assets 和 scripts）原样复制到我的用户 skill 目录，不要改文件内容。Claude Code 放到 ~/.claude/skills/boss-review ，Codex 放到 ~/.agents/skills/boss-review ，Cursor 放到 ~/.cursor/skills/boss-review 。你是哪一种，就放到对应的那个目录；分不清就先确认当前工具。装好后告诉我。
-```
 
-`~` 就是你的用户主目录。Windows 上一般是 `C:\Users\你的用户名`。
+装好后，直接说「给我这个老板打个分」。在 Codex 里也可以输入 `$boss-review`。
 
-装好之后，直接说「给我这个老板打个分」，或者「评估我怎么用 AI」。在 Codex 里也可以输入 `$boss-review`。
-
-在普通聊天窗口里使用时，把 [`prompt.md`](prompt.md) 和几段对话贴进去。需要手动安装或上传 Skill 时，见[分工具安装指南](docs/install.md)。
+手动安装、上传 ZIP 或使用其他工具，请看[分工具安装指南](docs/install.md)。在普通聊天窗口里，把 [`prompt.md`](prompt.md) 和几段对话贴进去即可使用。
 
 ## 怎么用
 
