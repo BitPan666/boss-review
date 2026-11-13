@@ -1,0 +1,5 @@
+{
+  "name": "boss-review",
+  "version": "2.0.0",
+  "description": "按 8 个习惯给你当 AI 老板打分，引用原话，并生成一张固定版式的绩效考核报告。"
+}

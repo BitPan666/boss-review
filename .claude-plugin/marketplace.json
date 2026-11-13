@@ -1,0 +1,24 @@
+{
+  "name": "bitpan666",
+  "description": "给管 AI 的老板打分",
+  "owner": {
+    "name": "BitPan666",
+    "url": "https://github.com/BitPan666/boss-review"
+  },
+  "plugins": [
+    {
+      "name": "boss-review",
+      "source": "./",
+      "description": "按 8 个习惯给你当 AI 老板打分，引用原话，并生成一张固定版式的绩效考核报告。",
+      "version": "2.0.0",
+      "version": "1.0.0",
+      "author": {
+        "name": "BitPan666"
+      },
+      "homepage": "https://github.com/BitPan666/boss-review",
+      "repository": "https://github.com/BitPan666/boss-review",
+      "license": "MIT",
+      "keywords": ["boss-review", "skills"]
+    }
+  ]
+}
