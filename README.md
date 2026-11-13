@@ -2,7 +2,7 @@
 
 ![五档总评的示例，从 A 到 E](docs/overview.png)
 
-<a href="docs/rendered/A.png"><img src="docs/rendered/A.png" width="680" alt="A 级成绩单，用的是示例数据"></a>
+<a href="docs/rendered/A.png"><img src="docs/rendered/A.png" width="340" alt="A 级成绩单，用的是示例数据"></a>
 
 你每天给 AI 派活，其实已经在当老板了。这里按 8 个习惯给你打分：有理有据，引用你的原话，评语轻松但具体，最后出一张可以截图分享的成绩单。版式是固定的，A 到 E 各有一套主题色。
 
